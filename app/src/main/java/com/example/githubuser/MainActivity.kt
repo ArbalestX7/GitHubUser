@@ -17,15 +17,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: UserAdapter
 
+
     companion object {
+        const val token = BuildConfig.API_KEY
         private const val TAG = "MainActivity"
-        private const val  GITHUBUSER_ID = "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"
+        private const val  GITHUBUSER_ID = token
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        adapter = UserAdapter()
 
         val layoutManager = LinearLayoutManager(this)
         binding.rvGituser.layoutManager = layoutManager
@@ -52,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful){
                     val responseBody = response.body()
                     if (responseBody != null){
-                        setGitHubUserData(responseBody.items)
+                        adapter.setList(responseBody.items)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
