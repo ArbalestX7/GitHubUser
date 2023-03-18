@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">GitHubUser</string>
     <string name="username">Lorem Ipsum</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Find Username</string>
+    <string name="following">Following</string>
+    <string name="follower">Followers</string>
+    <string name="name">Name</string>
+    <string name="jumlah">100</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tab_text_1">Follower</string>
+    <string name="tab_text_2">Following</string>
+
+
 </resources>

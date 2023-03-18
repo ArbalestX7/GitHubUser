@@ -1,94 +1,51 @@
 package com.example.githubuser
 
+import android.app.SearchManager
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.service.autofill.UserData
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
+
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.databinding.ActivityMainBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
     private lateinit var adapter: UserAdapter
+    private var listUsers = ArrayList<String>()
 
-
-    companion object {
-        const val token = BuildConfig.API_KEY
-        private const val TAG = "MainActivity"
-        private const val  GITHUBUSER_ID = token
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adapter = UserAdapter()
 
         val layoutManager = LinearLayoutManager(this)
         binding.rvGituser.layoutManager = layoutManager
-        binding.apply {
-            rvGituser.layoutManager = layoutManager
-            rvGituser.setHasFixedSize(true)
-            rvGituser.adapter = adapter
-        }
+        binding.rvGituser.setHasFixedSize(true)
+
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvGituser.addItemDecoration(itemDecoration)
 
-        findGitHubUser()
-
-    }
-    private fun findGitHubUser(){
-        showLoading(true)
-        val client = ApiConfig.getApiService().getGitHubUser(GITHUBUSER_ID)
-        client.enqueue(object : Callback<GitHubUserResponse>{
-            override fun onResponse(
-                call: Call<GitHubUserResponse>,
-                response: Response<GitHubUserResponse>
-            ) {
-                showLoading(false)
-                if (response.isSuccessful){
-                    val responseBody = response.body()
-                    if (responseBody != null){
-                        adapter.setList(responseBody.items)
-                    }
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                }
-            }
-
-            override fun onFailure(call: Call<GitHubUserResponse>, t: Throwable) {
-                showLoading (false)
-                Log.e(TAG, "onFailure: ${t.message}")
-            }
+        viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
+        viewModel.username.observe(this, { listUser ->
+            setUserData(listUser)
         })
-    }
 
-    private fun setGitHubUserData (gitHubUserResponseItem: List<ItemsItem>){
-        val listGitHubUserResponseItem = ArrayList<String>()
-        for (data in gitHubUserResponseItem) {
-            listGitHubUserResponseItem.add(
-                """
-                    ${data.login}
-                """.trimIndent()
-            )
-            listGitHubUserResponseItem.add(
-                """
-                    ${data.type}
-                """.trimIndent()
-            )
-            listGitHubUserResponseItem.add(
-                """
-                    ${data.avatarUrl}
-                """.trimIndent()
-            )
-        }
+        viewModel.isLoading.observe(this, {
+            showLoading(it)
+
+        })
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -97,5 +54,54 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.progressBar.visibility = View.GONE
         }
+    }
+
+    private fun setUserData(listUser: List<ItemsItem>) {
+        for (user in listUser) {
+            listUsers.add(
+                """
+                    ${user.avatarUrl};${user.login}
+                """.trimIndent()
+            )
+        }
+        val adapter = UserAdapter(listUsers)
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: List<String>) {
+                Intent(this@MainActivity, DetailUserActivity::class.java).also {
+                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data[1])
+                    it.putExtra(DetailUserActivity.EXTRA_AVATAR, data[0])
+                    startActivity(it)
+                }
+            }
+        })
+        binding.rvGituser.adapter = adapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.option_menu, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.search).actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.queryHint = resources.getString(R.string.search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                listUsers.clear()
+                viewModel.findGitHubUser(query)
+                searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return true
     }
 }
