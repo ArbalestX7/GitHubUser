@@ -20,8 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: UserAdapter
-    private var listUsers = ArrayList<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,13 +31,12 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(this)
         binding.rvGituser.layoutManager = layoutManager
         binding.rvGituser.setHasFixedSize(true)
-
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvGituser.addItemDecoration(itemDecoration)
 
         viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-        viewModel.username.observe(this, { listUser ->
-            setUserData(listUser)
+        viewModel.username.observe(this, { userList ->
+            setUserData(userList)
         })
 
         viewModel.isLoading.observe(this, {
@@ -56,27 +53,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUserData(listUser: List<ItemsItem>) {
-        for (user in listUser) {
-            listUsers.add(
-                """
-                    ${user.avatarUrl};${user.login}
-                """.trimIndent()
-            )
-        }
-        val adapter = UserAdapter(listUsers)
-        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: List<String>) {
-                Intent(this@MainActivity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data[1])
-                    it.putExtra(DetailUserActivity.EXTRA_AVATAR, data[0])
-                    startActivity(it)
-                }
-            }
-        })
-        binding.rvGituser.adapter = adapter
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.option_menu, menu)
@@ -88,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = resources.getString(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                listUsers.clear()
+                binding.rvGituser.visibility = View.GONE
                 viewModel.findGitHubUser(query)
                 searchView.clearFocus()
                 return true
@@ -103,5 +79,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
+    }
+    private fun setUserData(listUser: List<ItemsItem>) {
+        val adapter = UserAdapter(listUser)
+        binding.rvGituser.adapter = adapter
+        binding.rvGituser.visibility = View.VISIBLE
     }
 }

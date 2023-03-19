@@ -15,11 +15,10 @@ class FollowFragment : Fragment() {
     private var listFollowing = ArrayList<String>()
     private lateinit var binding: FragmentFollowBinding
     private lateinit var detailUserViewModel: DetailUserViewModel
-    var username : String? = null
 
     companion object {
-        const val ARG_POSITION = "section_number"
-        const val ARG_USERNAME = "section_username"
+        const val ARG_POSITION = "position"
+        const val ARG_USERNAME = ""
     }
 
 
@@ -34,8 +33,8 @@ class FollowFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val position = arguments?.getInt(ARG_POSITION, 0)
-        val username = arguments?.getString(ARG_USERNAME)
+        var position = 0
+        var username = arguments?.getString(ARG_USERNAME)
 
         Log.d("arguments: position", position.toString())
         Log.d("arguments: username", username.toString())
@@ -44,57 +43,39 @@ class FollowFragment : Fragment() {
             ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory()).get(
                 DetailUserViewModel::class.java
             )
-        detailUserViewModel.isLoading.observe(requireActivity()){loading ->
-            showLoading(loading)
+        arguments?.let {
+            position = it.getInt(ARG_POSITION)
+            username = it.getString(ARG_USERNAME)
         }
 
         if (position == 1){
-            detailUserViewModel.getFollower(username.toString())
-            detailUserViewModel.followers.observe(viewLifecycleOwner){
-                binding.rvFollow.layoutManager = LinearLayoutManager(requireActivity())
-
-                for (user in it){
-                    listFollower.add(
-                        """
-                            ${user.avatarUrl};${user.login}
-                        """.trimIndent()
-                    )
-                }
-
-                for (follower in listFollower) {
-                    Log.d("follower", follower)
-                }
-
-                val adapter = UserAdapter(listFollower)
-                binding.rvFollow.adapter = adapter
-            }
+            showLoadingUser(true)
+            username?.let {detailUserViewModel.getFollower(it)}
+            detailUserViewModel.followers.observe(viewLifecycleOwner,{
+                setFollowData(it)
+                showLoadingUser(false)
+            })
         } else {
-            detailUserViewModel.getFollowing(username.toString())
-            detailUserViewModel.following.observe(viewLifecycleOwner){
-                binding.rvFollow.layoutManager = LinearLayoutManager(requireActivity())
-
-                for (user in it){
-                    listFollowing.add(
-                        """
-                            ${user.avatarUrl};${user.login}
-                        """.trimIndent()
-                    )
-                }
-
-                for (following in listFollowing) {
-                    Log.d("following", following)
-                }
-
-                val adapter = UserAdapter(listFollowing)
-                binding.rvFollow.adapter = adapter
-            }
+            showLoadingUser(true)
+            username.let { detailUserViewModel.getFollowing() }
+            detailUserViewModel.following.observe(viewLifecycleOwner,{
+                setFollowData(it)
+                showLoadingUser(false)
+            })
         }
     }
-    private fun showLoading(isLoading: Boolean) {
+    private fun showLoadingUser(isLoading: Boolean) {
         if (isLoading) {
             binding.followProgressBar.visibility = View.VISIBLE
         } else {
             binding.followProgressBar.visibility = View.GONE
+        }
+    }
+    private fun setFollowData(listUser : List<ItemsItem>) {
+        binding.apply {
+            binding.rvFollow.layoutManager = LinearLayoutManager(requireActivity())
+            val adapter = UserAdapter(listUser)
+            binding.rvFollow.adapter = adapter
         }
     }
 }

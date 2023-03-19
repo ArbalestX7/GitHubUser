@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuser.databinding.ActivityDetailUserBinding
-import com.example.githubuser.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -16,8 +15,7 @@ class DetailUserActivity : AppCompatActivity() {
     private lateinit var viewModel: DetailUserViewModel
 
     companion object {
-        const val EXTRA_USERNAME = "extra_username"
-        const val EXTRA_AVATAR = "extra_avatar"
+        const val EXTRA_USER = "key_user"
 
         private val TAB_CODES = intArrayOf(
             R.string.tab_text_1,
@@ -35,32 +33,31 @@ class DetailUserActivity : AppCompatActivity() {
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(DetailUserViewModel::class.java)
-        val parameterUserName = intent.getStringExtra(EXTRA_USERNAME)
+        val userLogin = intent.getStringExtra(EXTRA_USER)
+        binding.tvName.text = userLogin
 
-        if (parameterUserName != null) {
-            viewModel.getUserDetail(parameterUserName)
-            viewModel.getFollower(parameterUserName)
-            viewModel.getFollowing(parameterUserName)
-        }
 
-        viewModel.detailUser.observe(this) { Name ->
-            setDetailUser(Name)
-        }
-
-        viewModel.isLoading.observe(this) {
-            showLoading(it)
-        }
-        val sectionsPagerAdapter = SectionsPagerAdapter(this, parameterUserName)
+        val sectionsPagerAdapter = SectionsPagerAdapter(this)
+        sectionsPagerAdapter.username = userLogin.toString()
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         TabLayoutMediator(tabs, viewPager) { tab, position ->
-            if (position == 1) {
                 tab.text = resources.getString(TAB_CODES[position])
-            } else {
-                tab.text = resources.getString(TAB_CODES[position])
-            }
         }.attach()
+
+        if (userLogin != null){
+            showLoading(true)
+            viewModel.getUserDetail(userLogin)
+            showLoading(false)
+        }
+        viewModel.detailUser.observe(this, {detailUser ->
+            setDetailUser(detailUser)
+        })
+        viewModel.isLoading.observe(this, {
+            showLoading(it)
+        })
+
     }
 
     private fun setDetailUser(Name: DetailUserResponse?) {

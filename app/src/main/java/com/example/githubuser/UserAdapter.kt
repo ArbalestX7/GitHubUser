@@ -1,5 +1,6 @@
 package com.example.githubuser
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,28 +9,26 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class UserAdapter(private val listUser: ArrayList<String>)  : RecyclerView.Adapter<UserAdapter.ViewHolder>(){
+class UserAdapter(private val listUser: List<ItemsItem>)  : RecyclerView.Adapter<UserAdapter.ViewHolder>(){
 
-    private var onItemClickCallback: OnItemClickCallback?=null
-    interface OnItemClickCallback {
-        fun onItemClicked(data: List<String>)
-    }
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false))
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val Users = listUser[position].split(";")
-        holder.tvName.text = Users[1]
+        val Users = listUser[position]
+        holder.tvName.text = Users.login
         Glide.with(holder.itemView.context)
-            .load(Users[0])
+            .load(Users.avatarUrl)
             .circleCrop()
             .into(holder.imgPhoto)
-        holder.itemView.setOnClickListener{onItemClickCallback?.onItemClicked(Users)}
+
+        holder.itemView.setOnClickListener {
+            val intentDetail = Intent(holder.itemView.context, DetailUserActivity::class.java)
+            intentDetail.putExtra(DetailUserActivity.EXTRA_USER, Users.login)
+            holder.itemView.context.startActivity(intentDetail)
+        }
     }
 
     override fun getItemCount() = listUser.size

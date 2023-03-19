@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,12 +28,12 @@ class DetailUserViewModel : ViewModel() {
     }
 
     init {
-        detailUser.value?.let { getUserDetail(it.login) }
+        getUserDetail()
     }
 
-    fun getUserDetail(username: String) {
+    fun getUserDetail(query: String = "") {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getDetailUser(username)
+        val client = ApiConfig.getApiService().getDetailUser(query)
         client.enqueue(object : Callback<DetailUserResponse>{
             override fun onResponse(
                 call: Call<DetailUserResponse>,
@@ -42,7 +43,7 @@ class DetailUserViewModel : ViewModel() {
                 if (response.isSuccessful){
                     _detailUser.value = response.body()
                 }else{
-                    Log.e(TAG, "onFailure: ${response.message()}")
+                    Log.e(TAG, "onFailure: ${response.message()}ccc")
                 }
             }
 
@@ -55,9 +56,9 @@ class DetailUserViewModel : ViewModel() {
         })
     }
 
-    fun getFollower(username: String) {
+    fun getFollower(query: String = "") {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getFollowers(username)
+        val client = ApiConfig.getApiService().getFollowers(query)
         client.enqueue(object: Callback<List<ItemsItem>>{
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
@@ -67,7 +68,7 @@ class DetailUserViewModel : ViewModel() {
                 if (response.isSuccessful){
                     _followers.value = response.body()
                 }else{
-                    Log.e(TAG, "onFailure: ${response.message()}" )
+                    Log.e(TAG, "onFailure: ${response.message()}bbb" )
                 }
             }
 
@@ -77,9 +78,9 @@ class DetailUserViewModel : ViewModel() {
             }
         })
     }
-    fun getFollowing(username: String) {
+    fun getFollowing(query: String = "") {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getFollowing(username)
+        val client = ApiConfig.getApiService().getFollowing(query)
         client.enqueue(object: Callback<List<ItemsItem>>{
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
@@ -87,9 +88,9 @@ class DetailUserViewModel : ViewModel() {
             ) {
                 _isLoading.value = false
                 if (response.isSuccessful){
-                    _followers.value = response.body()
+                    _following.value = response.body()
                 }else{
-                    Log.e(TAG, "onFailure: ${response.message()}" )
+                    Log.e(TAG, "onFailure: ${response.message()}aaaaa" )
                 }
             }
 

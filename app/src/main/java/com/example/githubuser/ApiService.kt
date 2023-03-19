@@ -20,11 +20,11 @@ interface ApiService {
 
     @GET("users/{username}/followers")
     fun getFollowers(
-        @Path("username") login: String
+        @Path("username") username: String
     ): Call<List<ItemsItem>>
     @GET("users/{username}/following")
     fun getFollowing(
-        @Path("username") login: String
+        @Path("username") username: String
     ): Call<List<ItemsItem>>
 
 
