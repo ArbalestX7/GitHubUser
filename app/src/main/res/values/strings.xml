@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GitHubUser</string>
-    <string name="username">Lorem Ipsum</string>
+    <string name="username">Dito</string>
     <string name="search">Search</string>
     <string name="search_hint">Find Username</string>
     <string name="following">Following</string>
@@ -10,6 +10,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_text_1">Follower</string>
     <string name="tab_text_2">Following</string>
+    <string name="fav_detail">Tambahkan ke Favorit?</string>
 
 
 </resources>

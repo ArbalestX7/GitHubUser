@@ -1,4 +1,4 @@
-package com.example.githubuser
+package com.example.githubuser.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,13 +8,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.githubuser.ItemsItem
+import com.example.githubuser.R
+import com.example.githubuser.activity.DetailUserActivity
 
 class UserAdapter(private val listUser: List<ItemsItem>)  : RecyclerView.Adapter<UserAdapter.ViewHolder>(){
 
-
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false))
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val Users = listUser[position]
@@ -33,11 +34,8 @@ class UserAdapter(private val listUser: List<ItemsItem>)  : RecyclerView.Adapter
 
     override fun getItemCount() = listUser.size
 
-
-
-
     class ViewHolder (view : View) : RecyclerView.ViewHolder(view){
-    val tvName : TextView = view.findViewById(R.id.tv_username)
-    val imgPhoto : ImageView = view.findViewById(R.id.img_user_photo)
+        val tvName : TextView = view.findViewById(R.id.tv_username)
+        val imgPhoto : ImageView = view.findViewById(R.id.img_user_photo)
     }
 }

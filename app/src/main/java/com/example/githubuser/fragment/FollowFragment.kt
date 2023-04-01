@@ -1,4 +1,4 @@
-package com.example.githubuser
+package com.example.githubuser.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuser.ItemsItem
+import com.example.githubuser.adapter.UserAdapter
 import com.example.githubuser.databinding.FragmentFollowBinding
+import com.example.githubuser.viewmodel.DetailUserViewModel
 
 class FollowFragment : Fragment() {
-    private var listFollower = ArrayList<String>()
-    private var listFollowing = ArrayList<String>()
-    private lateinit var binding: FragmentFollowBinding
+    private var _binding: FragmentFollowBinding? = null
+    private val binding get() = _binding!!
     private lateinit var detailUserViewModel: DetailUserViewModel
 
     companion object {
@@ -27,8 +29,10 @@ class FollowFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
-        binding = FragmentFollowBinding.inflate(inflater, container, false)
-        return binding.root
+        detailUserViewModel = ViewModelProvider(requireActivity())[DetailUserViewModel::class.java]
+        _binding = FragmentFollowBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,10 +43,6 @@ class FollowFragment : Fragment() {
         Log.d("arguments: position", position.toString())
         Log.d("arguments: username", username.toString())
 
-        detailUserViewModel =
-            ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory()).get(
-                DetailUserViewModel::class.java
-            )
         arguments?.let {
             position = it.getInt(ARG_POSITION)
             username = it.getString(ARG_USERNAME)
@@ -57,7 +57,7 @@ class FollowFragment : Fragment() {
             })
         } else {
             showLoadingUser(true)
-            username.let { detailUserViewModel.getFollowing() }
+            username?.let { detailUserViewModel.getFollowing(it)}
             detailUserViewModel.following.observe(viewLifecycleOwner,{
                 setFollowData(it)
                 showLoadingUser(false)
@@ -77,5 +77,10 @@ class FollowFragment : Fragment() {
             val adapter = UserAdapter(listUser)
             binding.rvFollow.adapter = adapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

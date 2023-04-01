@@ -1,9 +1,10 @@
-package com.example.githubuser
+package com.example.githubuser.adapter
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.githubuser.fragment.FollowFragment
 
 class SectionsPagerAdapter(activity: AppCompatActivity,): FragmentStateAdapter(activity) {
     override fun getItemCount(): Int {
@@ -14,7 +15,7 @@ class SectionsPagerAdapter(activity: AppCompatActivity,): FragmentStateAdapter(a
     override fun createFragment(position: Int): Fragment {
     val fragment = FollowFragment()
         fragment.arguments = Bundle().apply {
-            putInt(FollowFragment.ARG_POSITION, position+1)
+            putInt(FollowFragment.ARG_POSITION, position + 1)
             putString(FollowFragment.ARG_USERNAME, username)
         }
         return fragment
