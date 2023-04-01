@@ -1,20 +1,16 @@
-package com.example.githubuser.viewmodel
+package com.example.githubuser
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.githubuser.ItemsItem
-import com.example.githubuser.data.FavUserRepository
-import com.example.githubuser.database.FavUserEntity
 import com.example.githubuser.response.DetailUserResponse
 import com.example.githubuser.retrofit.ApiConfig
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DetailUserViewModel(application: Application) : ViewModel() {
+class DetailUserViewModel : ViewModel() {
 
     private val _detailUser = MutableLiveData<DetailUserResponse>()
     val detailUser: LiveData<DetailUserResponse> = _detailUser
@@ -28,8 +24,9 @@ class DetailUserViewModel(application: Application) : ViewModel() {
     private val _following = MutableLiveData<List<ItemsItem>>()
     val following: LiveData<List<ItemsItem>> = _following
 
-    private val mFavUserRepository: FavUserRepository =
-        FavUserRepository(application)
+    companion object{
+        const val TAG = "DetailUserViewModel"
+    }
 
     init {
         getUserDetail()
@@ -97,20 +94,5 @@ class DetailUserViewModel(application: Application) : ViewModel() {
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
-    }
-
-    fun insert (favUserEntity: FavUserEntity) {
-        mFavUserRepository.insert(favUserEntity)
-    }
-
-    fun delete(id: Int) {
-        mFavUserRepository.delete(id)
-    }
-
-    fun getFavorite():LiveData<List<FavUserEntity>> =
-        mFavUserRepository.getAllFavorites()
-
-    companion object{
-        const val TAG = "DetailUserViewModel"
     }
 }

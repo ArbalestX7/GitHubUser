@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.githubuser.DetailUserViewModel
 import com.example.githubuser.ItemsItem
 import com.example.githubuser.adapter.UserAdapter
 import com.example.githubuser.databinding.FragmentFollowBinding
-import com.example.githubuser.viewmodel.DetailUserViewModel
 
 class FollowFragment : Fragment() {
     private var _binding: FragmentFollowBinding? = null

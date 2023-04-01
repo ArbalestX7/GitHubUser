@@ -36,7 +36,7 @@ class MainViewModel : ViewModel() {
                 if (response.isSuccessful){
                     _username.value = response.body()?.items
                 }else{
-                    Log.e(TAG, "onFailure: ${response.message()}")
+                    Log.e(TAG, "onFailure: ${response.code()}")
                 }
             }
 
