@@ -12,15 +12,17 @@ abstract class FavUserRoomDb : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE : FavUserRoomDb? = null
+        private var INSTANCE: FavUserRoomDb? = null
 
         @JvmStatic
         fun getDatabase(context: Context): FavUserRoomDb {
-            if (INSTANCE == null){
-                synchronized(FavUserRoomDb::class.java){
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                    FavUserRoomDb::class.java, "favUser_database")
-                    .build()
+            if (INSTANCE == null) {
+                synchronized(FavUserRoomDb::class.java) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        FavUserRoomDb::class.java, "favorite_user_database"
+                    )
+                        .build()
                 }
             }
             return INSTANCE as FavUserRoomDb

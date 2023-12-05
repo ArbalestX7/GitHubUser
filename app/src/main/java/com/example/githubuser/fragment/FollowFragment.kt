@@ -2,10 +2,10 @@ package com.example.githubuser.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubuser.DetailUserViewModel
@@ -48,22 +48,23 @@ class FollowFragment : Fragment() {
             username = it.getString(ARG_USERNAME)
         }
 
-        if (position == 1){
+        if (position == 1) {
             showLoadingUser(true)
-            username?.let {detailUserViewModel.getFollower(it)}
-            detailUserViewModel.followers.observe(viewLifecycleOwner,{
+            username?.let { detailUserViewModel.getFollower(it) }
+            detailUserViewModel.followers.observe(viewLifecycleOwner, {
                 setFollowData(it)
                 showLoadingUser(false)
             })
         } else {
             showLoadingUser(true)
-            username?.let { detailUserViewModel.getFollowing(it)}
-            detailUserViewModel.following.observe(viewLifecycleOwner,{
+            username?.let { detailUserViewModel.getFollowing(it) }
+            detailUserViewModel.following.observe(viewLifecycleOwner, {
                 setFollowData(it)
                 showLoadingUser(false)
             })
         }
     }
+
     private fun showLoadingUser(isLoading: Boolean) {
         if (isLoading) {
             binding.followProgressBar.visibility = View.VISIBLE
@@ -71,7 +72,8 @@ class FollowFragment : Fragment() {
             binding.followProgressBar.visibility = View.GONE
         }
     }
-    private fun setFollowData(listUser : List<ItemsItem>) {
+
+    private fun setFollowData(listUser: List<ItemsItem>) {
         binding.apply {
             binding.rvFollow.layoutManager = LinearLayoutManager(requireActivity())
             val adapter = UserAdapter(listUser)

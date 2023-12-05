@@ -12,10 +12,13 @@ import com.example.githubuser.ItemsItem
 import com.example.githubuser.R
 import com.example.githubuser.activity.DetailUserActivity
 
-class UserAdapter(private val listUser: List<ItemsItem>)  : RecyclerView.Adapter<UserAdapter.ViewHolder>(){
+class UserAdapter(private val listUser: List<ItemsItem>) :
+    RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
-        ViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false))
+        ViewHolder(
+            LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false)
+        )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val Users = listUser[position]
@@ -34,8 +37,8 @@ class UserAdapter(private val listUser: List<ItemsItem>)  : RecyclerView.Adapter
 
     override fun getItemCount() = listUser.size
 
-    class ViewHolder (view : View) : RecyclerView.ViewHolder(view){
-        val tvName : TextView = view.findViewById(R.id.tv_username)
-        val imgPhoto : ImageView = view.findViewById(R.id.img_user_photo)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvName: TextView = view.findViewById(R.id.tv_username)
+        val imgPhoto: ImageView = view.findViewById(R.id.img_user_photo)
     }
 }

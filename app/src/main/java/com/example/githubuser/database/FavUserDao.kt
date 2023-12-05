@@ -5,15 +5,17 @@ import androidx.room.*
 
 @Dao
 interface FavUserDao {
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(favUserEntity: FavUserEntity)
+    fun insertFavorite(favUserEntity: FavUserEntity)
 
-    @Query("DELETE FROM FavUserEntity WHERE FavUserEntity.id = :id")
-    fun removeFavorite(id: Int)
+    @Delete
+    fun delete(favUserEntity: FavUserEntity)
 
-    @Query("SELECT * FROM FavUserEntity ORDER by login ASC")
-    fun getAllFavorite(): LiveData<List<FavUserEntity>>
+    @Query("SELECT * from favorite_user")
+    fun getAllFavoriteUser(): LiveData<List<FavUserEntity>>
 
-    @Query("SELECT * FROM FavUserEntity WHERE FavUserEntity.id = :id")
-    fun getFavUserById (id: Int): LiveData<FavUserEntity>
+    @Query("SELECT EXISTS(SELECT * FROM favorite_user WHERE login = :login)")
+    fun isFavorite(login: String): LiveData<Boolean>
+
 }

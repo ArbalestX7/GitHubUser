@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    companion object{
+    companion object {
         private const val TAG = "MainViewModel"
         private const val USERNAME = "Arif"
     }
@@ -27,15 +27,18 @@ class MainViewModel : ViewModel() {
         findGitHubUser(USERNAME)
     }
 
-    fun findGitHubUser(query:String){
-        _isLoading.value= true
+    fun findGitHubUser(query: String) {
+        _isLoading.value = true
         val client = ApiConfig.getApiService().getGitHubUser(query)
         client.enqueue(object : Callback<GitHubUserResponse> {
-            override fun onResponse(call: Call<GitHubUserResponse>, response: Response<GitHubUserResponse>){
+            override fun onResponse(
+                call: Call<GitHubUserResponse>,
+                response: Response<GitHubUserResponse>,
+            ) {
                 _isLoading.value = false
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     _username.value = response.body()?.items
-                }else{
+                } else {
                     Log.e(TAG, "onFailure: ${response.code()}")
                 }
             }
@@ -46,5 +49,4 @@ class MainViewModel : ViewModel() {
             }
         })
     }
-
 }

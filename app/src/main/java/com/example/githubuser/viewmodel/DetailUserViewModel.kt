@@ -24,9 +24,6 @@ class DetailUserViewModel : ViewModel() {
     private val _following = MutableLiveData<List<ItemsItem>>()
     val following: LiveData<List<ItemsItem>> = _following
 
-    companion object{
-        const val TAG = "DetailUserViewModel"
-    }
 
     init {
         getUserDetail()
@@ -35,21 +32,21 @@ class DetailUserViewModel : ViewModel() {
     fun getUserDetail(query: String = "") {
         _isLoadingUser.value = true
         val client = ApiConfig.getApiService().getDetailUser(query)
-        client.enqueue(object : Callback<DetailUserResponse>{
+        client.enqueue(object : Callback<DetailUserResponse> {
             override fun onResponse(
                 call: Call<DetailUserResponse>,
-                response: Response<DetailUserResponse>
+                response: Response<DetailUserResponse>,
             ) {
                 _isLoadingUser.value = false
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     _detailUser.value = response.body()
-                }else{
+                } else {
                     Log.e(TAG, "onFailure: ${response.code()}")
                 }
             }
 
             override fun onFailure(
-                call: Call<DetailUserResponse>, t: Throwable
+                call: Call<DetailUserResponse>, t: Throwable,
             ) {
                 _isLoadingUser.value = false
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
@@ -59,15 +56,15 @@ class DetailUserViewModel : ViewModel() {
 
     fun getFollower(query: String = "") {
         val client = ApiConfig.getApiService().getFollowers(query)
-        client.enqueue(object: Callback<List<ItemsItem>>{
+        client.enqueue(object : Callback<List<ItemsItem>> {
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
                 response: Response<List<ItemsItem>>,
             ) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     _followers.value = response.body()
-                }else{
-                    Log.e(TAG, "onFailure: ${response.message()}" )
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
@@ -76,17 +73,18 @@ class DetailUserViewModel : ViewModel() {
             }
         })
     }
+
     fun getFollowing(query: String = "") {
         val client = ApiConfig.getApiService().getFollowing(query)
-        client.enqueue(object: Callback<List<ItemsItem>>{
+        client.enqueue(object : Callback<List<ItemsItem>> {
             override fun onResponse(
                 call: Call<List<ItemsItem>>,
                 response: Response<List<ItemsItem>>,
             ) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     _following.value = response.body()
-                }else{
-                    Log.e(TAG, "onFailure: ${response.code()}" )
+                } else {
+                    Log.e(TAG, "onFailure: ${response.code()}")
                 }
             }
 
@@ -94,5 +92,9 @@ class DetailUserViewModel : ViewModel() {
                 Log.e(TAG, "onFailure: ${t.message.toString()}")
             }
         })
+    }
+
+    companion object {
+        private const val TAG = "DetailUserViewModel"
     }
 }
