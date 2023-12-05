@@ -1,9 +1,9 @@
 package com.example.githubuser.data
 
 import android.app.Application
-import com.example.githubuser.database.FavUserDao
-import com.example.githubuser.database.FavUserEntity
-import com.example.githubuser.database.FavUserRoomDb
+import com.example.githubuser.data.database.FavUserDao
+import com.example.githubuser.data.database.FavUserEntity
+import com.example.githubuser.data.database.FavUserRoomDb
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

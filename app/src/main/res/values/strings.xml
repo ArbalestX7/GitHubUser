@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GitHubUser</string>
+    <string name="app_name">GitsApp</string>
     <string name="username">Dito</string>
     <string name="search">Search</string>
     <string name="search_hint">Find Username</string>
@@ -10,15 +10,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_text_1">Follower</string>
     <string name="tab_text_2">Following</string>
-    <string name="remove_favorite_user">Removed to Favorite Users</string>
+    <string name="remove_favorite_user">Removed from Favorite Users</string>
     <string name="add_favorite_user">Added to Favorite Users</string>
     <string name="favorite">Favorite</string>
-    <string name="no_favorite_users">Tidak Ada Favorite User</string>
+    <string name="no_favorite_users">Data Favoritmu Kosong !!!</string>
     <string name="favorite_user">Favorite User</string>
     <string name="settings">Settings</string>
     <string name="detail_user">Detail User</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="setting">Settings</string>
+    <string name="logo_github">Logo Github</string>
 
 
 </resources>

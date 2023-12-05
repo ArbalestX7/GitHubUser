@@ -24,8 +24,8 @@ android {
     }
     buildFeatures {
         viewBinding true
-        dataBinding true
         buildConfig true
+        dataBinding true
     }
     buildTypes {
         release {
@@ -72,4 +72,6 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.5.6"
     //DataStore Pref
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    //Lottie Animation
+    implementation 'com.airbnb.android:lottie:6.1.0'
 }

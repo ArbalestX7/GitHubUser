@@ -15,7 +15,7 @@
         android:theme="@style/Theme.GitHubUser"
         tools:targetApi="31">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,17 +24,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:exported="true"
             android:fitsSystemWindows="true"/>
         <activity
-            android:name=".activity.FavoriteActivity"
+            android:name=".ui.activity.FavoriteActivity"
             android:exported="true"/>
         <activity
-            android:name=".activity.DetailUserActivity"
+            android:name=".ui.activity.DetailUserActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
         </activity>
     </application>
