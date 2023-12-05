@@ -42,14 +42,15 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = getString(R.string.detail_user)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         favoriteViewModel = obtainViewModel(this@DetailUserActivity)
 
         val userLogin = intent.getStringExtra(EXTRA_USER)
         binding.tvName.text = userLogin
 
+        supportActionBar?.title = userLogin
+        //getString(R.string.detail_user)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         sectionsPagerAdapter.username = userLogin.toString()
